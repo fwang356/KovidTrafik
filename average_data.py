@@ -1,11 +1,14 @@
-import numpy as np
+import pandas as pd
 
-east_west = np.genfromtxt("east-west.csv", delimiter=",", filling_values=5, max_rows=26)
-west_east = np.genfromtxt("west-east.csv", delimiter=",", filling_values=5, max_rows=26)
-north_south = np.genfromtxt("north-south.csv", delimiter=",", filling_values=5, max_rows=26)
-south_north = np.genfromtxt("south-north.csv", delimiter=",", filling_values=5, max_rows=26)
+east_west = pd.read_csv("east-west.csv", index_col=0, skiprows=1, nrows=24)
+west_east = pd.read_csv("west-east.csv", index_col=0, skiprows=1, nrows=24)
+north_south = pd.read_csv("north-south.csv", index_col=0, skiprows=1, nrows=24)
+south_north = pd.read_csv("south-north.csv", index_col=0, skiprows=1, nrows=24)
 
-average_data = np.zeros(east_west.shape)
+all_data = pd.concat([east_west, west_east, north_south, south_north], 1)
 
-average_data = east_west + north_south + south_north + west_east
-average_data /= 4
+average_data = pd.DataFrame(data=[all_data[col].mean(1) for col in east_west.columns])
+
+"""for col in east_west.columns:
+    print(col)
+    print(all_data[col].mean(1))"""
