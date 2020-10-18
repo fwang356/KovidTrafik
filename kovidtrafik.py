@@ -13,8 +13,8 @@ def mean(dataset):
     return average
 
 def model(date, time):
-    aug30 = dt.date(2020, 8, 30)
-    delta = date - aug30
+    end = dt.date(2020, 12, 31)
+    delta = date - end
     hours = (delta.days - 1) * 24 + time.hour + 1
     predictions = predict(hours)
 
