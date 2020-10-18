@@ -31,7 +31,7 @@ std = series.rolling(window=24).std()
 """
 
 for t in range(len(test)):
-	model = SARIMAX(history, order=(24,1,0), seasonal_order=())
+	model = ARIMA(history, order=(24,1,0))
 	model_fit = model.fit(disp=0)
 	output = model_fit.forecast()
 	yhat = output[0]
