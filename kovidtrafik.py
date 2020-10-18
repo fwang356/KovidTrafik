@@ -34,7 +34,4 @@ def model(date, time):
     else:
         print("Traffic levels in Atlanta will be moderate, about %d percent of the average" % percent)
 
-date = dt.date(2020, 8, 31)
-time = dt.time(6)
 
-model(date, time)
