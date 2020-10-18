@@ -28,13 +28,13 @@ size = int(len(X) * 0.85)
 train, test = X[0:size], X[size:len(X)]
 history = [x for x in train]
 predictions = list()
-
+"""
 for i in range(len(test)):
 	# difference data
 	hours_in_week = 168
 	diff = difference(history, hours_in_week)
 	# predict
-	model = ARIMA(diff, order=(1, 0, 0))
+	model = ARIMA(diff, order=(3, 1, 1))
 	model_fit = model.fit(trend='nc', disp=0)
 	yhat = model_fit.forecast()[0]
 	yhat = inverse_difference(history, yhat, hours_in_week)
@@ -56,3 +56,4 @@ residuals.hist(ax=pyplot.gca())
 pyplot.subplot(212)
 residuals.plot(kind='kde', ax=pyplot.gca())
 pyplot.show()
+"""
