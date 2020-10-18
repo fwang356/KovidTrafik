@@ -9,7 +9,7 @@ X = series.values
 hours_in_week = 168
 diff = difference(X, hours_in_week)
 
-model = ARIMA(diff, order=(3, 1, 1))
+model = ARIMA(diff, order=(2, 0, 0))
 model_fit = model.fit(trend='nc', disp=0)
 
 model_fit.save('model.pkl')

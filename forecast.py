@@ -18,16 +18,16 @@ def predict(hours):
     yhat = model_fit.forecast()[0]
     yhat = inverse_difference(history, yhat, hours_in_week)
     predictions.append(yhat)
-    history.append(yhat[0])
+    history.append(yhat)
 
     for i in range(1, hours):
         diff = difference(history, hours_in_week)
 
-        model = ARIMA(diff, order=(3,1,1))
+        model = ARIMA(diff, order=(1,0,0))
         model_fit = model.fit(trend='nc', disp=0)
         yhat = model_fit.forecast()[0]
         yhat = inverse_difference(history, yhat, hours_in_week)
-        history.append(yhat[0])
+        history.append(yhat)
         predictions.append(yhat)
 
     return predictions

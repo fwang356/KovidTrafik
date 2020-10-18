@@ -34,4 +34,3 @@ def model(date, time):
     else:
         print("Traffic levels in Atlanta will be moderate, about %d percent of the average" % percent)
 
-
