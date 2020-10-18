@@ -3,6 +3,7 @@ import pandas as pd
 
 import preprocessing as pp
 
+
 # create a differenced series
 def difference(dataset, interval=1):
 	diff = list()
@@ -10,6 +11,7 @@ def difference(dataset, interval=1):
 		value = dataset[i] - dataset[i - interval]
 		diff.append(value)
 	return pd.Series(diff)
+
 
 # invert differenced value
 def inverse_difference(history, yhat, interval=1):
