@@ -1,12 +1,25 @@
 import numpy as np
 import pandas.plotting as pd
+from pandas import Series
 from matplotlib import pyplot
 from statsmodels.tsa.arima_model import ARIMA
-# import statsmodels.tsa.statespace.sarimax.SARIMAX as SARIMAX
+import statsmodels.tsa.statespace.sarimax as SARIMAX
 from sklearn.metrics import mean_squared_error
-from statsmodels.graphics.tsaplots import plot_acf
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 
 import preprocessing as pp
+
+# create a differenced series
+def difference(dataset, interval=1):
+	diff = list()
+	for i in range(interval, len(dataset)):
+		value = dataset[i] - dataset[i - interval]
+		diff.append(value)
+	return Series(diff)
+
+# invert differenced value
+def inverse_difference(history, yhat, interval=1):
+	return yhat + history[-interval]
 
 series = pp.get_data()
 X = series.values
@@ -14,31 +27,21 @@ size = int(len(X) * 0.66)
 train, test = X[0:size], X[size:len(X)]
 history = [x for x in train]
 predictions = list()
-"""
-mini_series = series[0:24]
-diff = list()
-for i in range(len(series)):
-	value = series[i] - series[i-24]
-	diff.append(value)
-mini_diff = diff[0:120]
-# pdiff = pd.Series(diff)
-mean = series.rolling(window=24).mean()
-# diffmean = pdiff.rolling(window=24).mean()
-# print(mean)
-std = series.rolling(window=24).std()
-# diffstd = pdiff.rolling(window=24).std()
-# print(std)
-"""
 
-for t in range(len(test)):
-	model = ARIMA(history, order=(24,1,0))
-	model_fit = model.fit(disp=0)
-	output = model_fit.forecast()
-	yhat = output[0]
+for i in range(len(test)):
+	# difference data
+	hours_in_week = 168
+	diff = difference(history, hours_in_week)
+	# predict
+	model = ARIMA(diff, order=(2, 1, 1))
+	model_fit = model.fit(trend='nc', disp=0)
+	yhat = model_fit.forecast()[0]
+	yhat = inverse_difference(history, yhat, hours_in_week)
 	predictions.append(yhat)
-	obs = test[t]
+	# observation
+	obs = test[i]
 	history.append(obs)
-	print('predicted=%f, expected=%f' % (yhat, obs))
+	print('Predicted=%d, Expected=%d' % (yhat, obs))
 error = mean_squared_error(test, predictions)
 print('Test MSE: %.3f' % error)
 
@@ -46,9 +49,5 @@ print('Test MSE: %.3f' % error)
 # plot
 pyplot.plot(test)
 pyplot.plot(predictions, color='red')
-pd.autocorrelation_plot(mini_series)
-#pyplot.plot(diffmean, color = "green")
-#pyplot.plot(diffstd, color = "red")
-plot_acf(series)
 pyplot.show()
 """
